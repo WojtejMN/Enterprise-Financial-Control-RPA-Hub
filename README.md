@@ -1,3 +1,6 @@
+# Enterprise Financial Control RPA Hub
+### Kompleksowy Ekosystem Automatyzacji i Inżynierii Danych (End-to-End Cloud & Desktop RPA Pipeline)
+
 🛠️ Wykorzystany Stack Technologiczny (Tech Stack)
 Orkiestracja i Logika Chmurowa: Power Automate Cloud Flows (Automated & Scheduled Pipelines).
 
