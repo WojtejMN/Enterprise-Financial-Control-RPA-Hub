@@ -1,0 +1,13 @@
+DISABLE SET InvoiceText TO $'''Faktura VAT nr: FV/2026/06/99
+Sprzedawca: Firma Testowa Sp. z o.o.
+NIP: 1234567890
+Data wystawienia: 21.06.2026
+Do zapłaty Razem: 4 550,20 PLN'''
+Folder.GetFiles Folder: $'''C:\\Users\\Maciej\\Desktop\\01_Input_Buffer''' FileFilter: $'''*.pdf''' IncludeSubfolders: False FailOnAccessDenied: True SortBy1: Folder.SortBy.NoSort SortDescending1: False SortBy2: Folder.SortBy.NoSort SortDescending2: False SortBy3: Folder.SortBy.NoSort SortDescending3: False Files=> Files
+LOOP FOREACH CurrentItem IN Files
+    Pdf.ExtractTextFromPDF.ExtractText PDFFile: CurrentItem DetectLayout: False ExtractedText=> ExtractedPDFText
+    Text.ParseText.RegexParseForFirstOccurrence Text: ExtractedPDFText TextToFind: $'''\\b\\d{3}[-]?\\d{2,3}[-]?\\d{2}[-]?\\d{2,3}\\b''' StartingPosition: 0 IgnoreCase: True OccurrencePosition=> Position Match=> Nip_Matches
+    Text.ParseText.RegexParseForFirstOccurrence Text: ExtractedPDFText TextToFind: $'''(?:Razem|Brutto|Suma)\\s*[:\\s]*([0-9\\s ]+[,\\.]\\d{2})''' StartingPosition: 0 IgnoreCase: False OccurrencePosition=> Position2 Match=> Amount_Matches
+    Text.Replace.ReplaceTextWithRegex Text: Amount_Matches TextToFind: $'''[^\\d,.]''' IgnoreCase: True ReplaceWith: $'''%''%''' ActivateEscapeSequences: False Result=> CleanAmount
+    Text.Replace.ReplaceText Text: CleanAmount TextToFind: $''',''' IgnoreCase: False ReplaceWith: $'''.''' ActivateEscapeSequences: False ComparisonType: Text.TextComparisonType.CultureSensitive Result=> FinalSQLAmount
+END
