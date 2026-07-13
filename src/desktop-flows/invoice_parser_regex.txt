@@ -10,4 +10,5 @@ LOOP FOREACH CurrentItem IN Files
     Text.ParseText.RegexParseForFirstOccurrence Text: ExtractedPDFText TextToFind: $'''(?:Razem|Brutto|Suma)\\s*[:\\s]*([0-9\\s ]+[,\\.]\\d{2})''' StartingPosition: 0 IgnoreCase: False OccurrencePosition=> Position2 Match=> Amount_Matches
     Text.Replace.ReplaceTextWithRegex Text: Amount_Matches TextToFind: $'''[^\\d,.]''' IgnoreCase: True ReplaceWith: $'''%''%''' ActivateEscapeSequences: False Result=> CleanAmount
     Text.Replace.ReplaceText Text: CleanAmount TextToFind: $''',''' IgnoreCase: False ReplaceWith: $'''.''' ActivateEscapeSequences: False ComparisonType: Text.TextComparisonType.CultureSensitive Result=> FinalSQLAmount
+    File.WriteText File: $'''C:\\Users\\Maciej\\Desktop\\01_Input_Buffer\\Baza_Faktur.csv''' TextToWrite: $'''%Nip_Matches%;%FinalSQLAmount%''' AppendNewLine: True IfFileExists: File.IfFileExists.Append Encoding: File.FileEncoding.Unicode
 END
