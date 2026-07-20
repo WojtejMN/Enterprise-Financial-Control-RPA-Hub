@@ -4,6 +4,8 @@ NIP: 1234567890
 Data wystawienia: 21.06.2026
 Do zapłaty Razem: 4 550,20 PLN'''
 Folder.GetFiles Folder: $'''C:\\Users\\Maciej\\Desktop\\01_Input_Buffer''' FileFilter: $'''*.pdf''' IncludeSubfolders: False FailOnAccessDenied: True SortBy1: Folder.SortBy.NoSort SortDescending1: False SortBy2: Folder.SortBy.NoSort SortDescending2: False SortBy3: Folder.SortBy.NoSort SortDescending3: False Files=> Files
+SET SumaKwot TO 0
+SET LiczbaFaktur TO 0
 LOOP FOREACH CurrentItem IN Files
     Pdf.ExtractTextFromPDF.ExtractText PDFFile: CurrentItem DetectLayout: False ExtractedText=> ExtractedPDFText
     Text.ParseText.RegexParseForFirstOccurrence Text: ExtractedPDFText TextToFind: $'''\\b\\d{3}[-]?\\d{2,3}[-]?\\d{2}[-]?\\d{2,3}\\b''' StartingPosition: 0 IgnoreCase: True OccurrencePosition=> Position Match=> Nip_Matches
@@ -11,4 +13,20 @@ LOOP FOREACH CurrentItem IN Files
     Text.Replace.ReplaceTextWithRegex Text: Amount_Matches TextToFind: $'''[^\\d,.]''' IgnoreCase: True ReplaceWith: $'''%''%''' ActivateEscapeSequences: False Result=> CleanAmount
     Text.Replace.ReplaceText Text: CleanAmount TextToFind: $''',''' IgnoreCase: False ReplaceWith: $'''.''' ActivateEscapeSequences: False ComparisonType: Text.TextComparisonType.CultureSensitive Result=> FinalSQLAmount
     File.WriteText File: $'''C:\\Users\\Maciej\\Desktop\\01_Input_Buffer\\Baza_Faktur.csv''' TextToWrite: $'''%Nip_Matches%;%FinalSQLAmount%''' AppendNewLine: True IfFileExists: File.IfFileExists.Append Encoding: File.FileEncoding.Unicode
+    Text.ToNumber Text: FinalSQLAmount Number=> WartoscLiczbowa
+    Variables.IncreaseVariable Value: LiczbaFaktur IncrementValue: 1
+    SET SumaKwot TO SumaKwot + WartoscLiczbowa
 END
+Outlook.Launch Instance=> OutlookInstance
+Outlook.SendEmailThroughOutlook.SendEmail Instance: OutlookInstance Account: $'''176841@o365.prz.edu.pl''' SendTo: $'''176841@o365.prz.edu.pl''' Subject: $'''Raport Dzienny RPA - Przetworzono faktury''' Body: $'''Cześć,
+
+Przetwarzanie wsadowe zostało pomyślnie zakończone.
+
+Liczba przetworzonych faktur: %LiczbaFaktur%
+Łączna kwota zobowiązań netto: %SumaKwot% PLN
+
+Plik Baza_Faktur.csv został zaktualizowany na dysku lokalnym.
+
+Pozdrawiam,
+Twój System RPA''' IsBodyHtml: False IsDraft: False
+Outlook.Close Instance: OutlookInstance
