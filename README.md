@@ -11,7 +11,7 @@
 
 ## 📦 Struktura Modułowa Projektu (Module Breakdown)
 
-### 📧 Moduł 1: Multi-channel Ingestion Pipeline (Status: Ukończony i Zweryfikowany)
+### 📧 Moduł 1: Multi-channel Ingestion Pipeline (Status: Ukończony)
 **Cel:** Stworzenie bezpiecznego, odpornego na błędy punktu wejścia dla dokumentacji kosztowej firmy.
 *   **Mechanizm działania:** Przepływ działa w trybie ciągłym (24/7). Nasłuchuje wiadomości e-mail spełniających kryteria maski tematów (Faktura, FV).
 *   **Walidacja Techniczna (Input Validation):** System realizuje pętlę po tablicy załączników i sprawdza rozszerzenia plików przy użyciu instrukcji warunkowych logicznego alternatywy (OR). Dopuszczane są wyłącznie pliki `.pdf`, `.png` oraz `.jpg`.
@@ -30,7 +30,7 @@
 *   **Data Ingestion & Extraction:** Bot stacjonarny omija awaryjne interfejsy graficzne (UI), bezpośrednio parsując pliki PDF. Wykorzystuje zaawansowane wyrażenia regularne (Regex) do bezbłędnej ekstrakcji i standaryzacji kluczowych metadanych (NIP, kwoty brutto/netto).
 *   **Batch Processing & Reporting:** Oczyszczone informacje są wprowadzane w trybie wsadowym do pliku płaskiego (CSV Staging Area). W locie agregowana jest całkowita suma zobowiązań oraz wolumen dokumentów, po czym system automatycznie generuje i wysyła raport zarządczy poprzez integrację z aplikacją Outlook, zamykając proces End-to-End (E2E).
 
-### 📊 Moduł 4: Enterprise Data Warehouse & Analytics (Status: Planowany)
+### 📊 Moduł 4: Enterprise Data Warehouse & Analytics (Status: Ukończony)
 **Cel:** Konsolidacja danych i prezentacja wskaźników efektywności (KPI) dla kadry zarządzającej.
 *   **Mechanizm działania:** Integracja bazy SQL z Power BI. Tworzenie raportów dynamicznych prezentujących koszty operacyjne w czasie, ekspozycję na ryzyko walutowe oraz wskaźnik ROI wdrożonej automatyzacji (czas zaoszczędzony przez boty).
 
